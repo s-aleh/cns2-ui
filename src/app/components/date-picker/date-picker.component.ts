@@ -1,77 +1,76 @@
 import { Component, OnInit, Input, Output, ElementRef, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
+import { CfgService } from '../../services/cfg.service';
+
 @Component({
     selector: 'date-picker',
     templateUrl: './date-picker.component.html',
     styleUrls: ['./date-picker.component.css']
 })
+
 export class DatePickerComponent implements OnInit {
 
-    @Input() view: string;
     @Input() date: string;
-    @Input() dt: Date;
     @Output() onGetDate = new EventEmitter<string>();
     
-    local: string;
-    weekdayabbr: string;
-    monthabbr: string;
     placeholder: string;
     curDate: Date;
     datePipe: DatePipe;
 
-    constructor(elementRef: ElementRef) {
+    constructor(elementRef: ElementRef, private cfg: CfgService) {
         this.placeholder = elementRef.nativeElement.getAttribute('placeholder');
-        this.local = elementRef.nativeElement.getAttribute('local');
-        this.weekdayabbr = elementRef.nativeElement.getAttribute('weekdayabbr');
-        this.monthabbr = elementRef.nativeElement.getAttribute('monthabbr');
-        this.view = undefined;
+        cfg.init(
+            elementRef.nativeElement.getAttribute('local'),
+            elementRef.nativeElement.getAttribute('monthabbr'),
+            elementRef.nativeElement.getAttribute('weekdayabbr'),
+            elementRef.nativeElement.getAttribute('min-date'),
+            elementRef.nativeElement.getAttribute('max-date')
+        );
     }
 
     ngOnInit() {
-        this.datePipe = new DatePipe(this.local);
+        this.cfg.date = new Date(this.date);
+        this.datePipe = new DatePipe(this.cfg.getLocal());
         this.curDate = new Date(this.date);
         this.date = this.datePipe.transform(this.curDate, this.placeholder);
-        this.dt = new Date(this.date);
-        this.dt.setDate(1);
-        this.dt.setHours(0);
-        this.dt.setMinutes(0);
-        this.dt.setSeconds(0);
+        this.cfg.curDate = new Date(this.date);
+        this.cfg.curDate.setDate(1);
+        this.cfg.curDate.setHours(0);
+        this.cfg.curDate.setMinutes(0);
+        this.cfg.curDate.setSeconds(0);
     }
 
-    onDate(date: Date) {
-        this.curDate.setDate(this.dt.getDate());
-        this.curDate.setMonth(this.dt.getMonth());
-        this.curDate.setFullYear(this.dt.getFullYear());
-        this.date = this.datePipe.transform(this.curDate, this.placeholder);
-        this.view = undefined;
+    onDate() {
+        this.cfg.date.setDate(this.cfg.curDate.getDate());
+        this.cfg.date.setMonth(this.cfg.curDate.getMonth());
+        this.cfg.date.setFullYear(this.cfg.curDate.getFullYear());
+        this.date = this.datePipe.transform(this.cfg.date, this.placeholder);
+        this.cfg.view = undefined;
         this.onGetDate.emit(this.date);
     }
 
-    onMonth(dt: Date) {
-        this.dt = dt;
-        this.view = 'days';
+    onMonth() {
+        this.cfg.view = 'days';
     }
 
-    onYear(dt: Date) {
-        this.dt = dt;
-        this.view = 'months';
+    onYear() {
+        this.cfg.view = 'months';
     }
 
-    onDecade(dt: Date) {
-        this.dt = dt;
-        this.view = 'years';
+    onDecade() {
+        this.cfg.view = 'years';
     }
 
     onView(view: string) {
-        this.view = view;
+        this.cfg.view = view;
     }
 
     show(): void {
-        !this.view ? this.view = 'days' : this.view = undefined;
-        this.dt.setDate(1);
-        this.dt.setMonth(this.curDate.getMonth());
-        this.dt.setFullYear(this.curDate.getFullYear());
+        !this.cfg.view ? this.cfg.view = 'days' : this.cfg.view = undefined;
+        this.cfg.curDate.setDate(1);
+        this.cfg.curDate.setMonth(this.cfg.date.getMonth());
+        this.cfg.curDate.setFullYear(this.cfg.date.getFullYear());
     }
 
 }

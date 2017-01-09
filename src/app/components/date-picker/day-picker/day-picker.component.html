@@ -1,15 +1,15 @@
 <div class="dp-calendar">
     <div>
-        <div class="dp-head" (click)="setMonth(-1)"><span class="icon ion-arrow-left-b"></span></div><!--
-        --><div class="dp-head" (click)="onSetView('months')">{{datePipe.transform(dt, 'MMMM, yyyy')}}</div><!--
-        --><div class="dp-head" (click)="setMonth(1)"><span class="icon ion-arrow-right-b"></span></div>
+        <div class="dp-head dp-head-hover" (click)="setMonth(-1)"><span class="icon ion-arrow-left-b"></span></div><!--
+        --><div class="dp-head" (click)="onSetView('months')">{{datePipe.transform(cfg.curDate, 'MMMM, yyyy')}}</div><!--
+        --><div class="dp-head dp-head-hover" (click)="setMonth(1)"><span class="icon ion-arrow-right-b"></span></div>
     </div>
     <div class="dp-name-days">
-        <div class="dp-day" *ngFor="let name of 1 | nameWeekdays: weekdayabbr: local">{{name}}</div>
+        <div class="dp-day" *ngFor="let name of cfg.weekdays">{{name}}</div>
     </div>
     <div>
-        <div class="dp-day dp-day-off" *ngFor="let day of days.prevEnd | fromTo: days.prevStart">{{day}}</div><!--
-        --><div class="dp-day dp-day-active" (click)="setDay(date)" *ngFor="let date of days.curDays | fromTo: 1">{{date}}</div><!--
-        --><div class="dp-day dp-day-off" *ngFor="let day of days.nextEnd | fromTo: days.nextStart">{{day}}</div>
+        <div class="dp-day"
+            [ngClass]="{'dp-day-off': !day.enable, 'dp-day-active': day.enable, 'dp-cur-day': day.cur}"
+            (click)="setDay(day.date, day.enable)" *ngFor="let day of days">{{day.date}}</div>
     </div>
 </div>

@@ -1,20 +1,21 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+
+import { CfgService} from '../../../services/cfg.service';
 
 @Component({
     selector: 'year-picker',
     templateUrl: './year-picker.component.html',
     styleUrls: ['./year-picker.component.css', '../date-picker.component.css']
 })
-export class YearPickerComponent implements OnInit {
 
-    @Input() view: string;
-    @Input() dt: Date;
+export class YearPickerComponent implements OnInit {
+    
     @Output() onView = new EventEmitter<string>();
-    @Output() onYear = new EventEmitter<Date>();
+    @Output() onYear = new EventEmitter();
 
     decade = new Decade;
   
-    constructor() { }
+    constructor(private cfg: CfgService) { }
 
     ngOnInit() {
         this.decade = this.getDecade();
@@ -25,8 +26,8 @@ export class YearPickerComponent implements OnInit {
     }
 
     setYear(year: number): void {
-        this.dt.setFullYear(year);
-        this.onYear.emit(this.dt);
+        this.cfg.curDate.setFullYear(year);
+        this.onYear.emit();
     }
 
     setDecade(decade: number): void {
@@ -36,7 +37,7 @@ export class YearPickerComponent implements OnInit {
 
     getDecade(): Decade {
         let decade = new Decade;
-        decade.start = (this.dt.getFullYear() - this.dt.getFullYear() % 10) - 1;
+        decade.start = (this.cfg.curDate.getFullYear() - this.cfg.curDate.getFullYear() % 10) - 1;
         decade.end = decade.start + 11;
         return decade;
     }

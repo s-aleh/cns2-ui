@@ -1,30 +1,26 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
+
+import { CfgService } from '../../../services/cfg.service';
 
 @Component({
     selector: 'month-picker',
     templateUrl: './month-picker.component.html',
     styleUrls: ['./month-picker.component.css', '../date-picker.component.css']
 })
+
 export class MonthPickerComponent implements OnInit {
 
-    @Input() view: string;
-    @Input() dt: Date;
-    @Input() local: string;
-    @Input() monthabbr: string;
     @Output() onView = new EventEmitter<string>();
-    @Output() onMonth = new EventEmitter<Date>();
-    @Output() onYear = new EventEmitter<Date>();
+    @Output() onMonth = new EventEmitter();
+    @Output() onYear = new EventEmitter();
 
     datePipe: DatePipe;
 
-    constructor(elementRef: ElementRef) {
-        this.local = elementRef.nativeElement.getAttribute('local');
-        this.monthabbr = elementRef.nativeElement.getAttribute('monthabbr');
-    }
+    constructor(elementRef: ElementRef, private cfg: CfgService) { }
 
     ngOnInit() {
-        this.datePipe = new DatePipe(this.local);
+        this.datePipe = new DatePipe(this.cfg.local);
     }
 
     onSetView(view: string): void {
@@ -32,13 +28,13 @@ export class MonthPickerComponent implements OnInit {
     }
 
     setMonth(month: number): void {
-        this.dt.setMonth(month);
-        this.onMonth.emit(this.dt);
+        this.cfg.curDate.setMonth(month);
+        this.onMonth.emit();
     }
 
     setYear(year: number): void {
-        this.dt.setFullYear(this.dt.getFullYear() + year);
-        this.onYear.emit(this.dt);
+        this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + year);
+        this.onYear.emit();
     }
 
 }

@@ -1,20 +1,21 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+
+import { CfgService} from '../../../services/cfg.service';
 
 @Component({
     selector: 'decade-picker',
     templateUrl: './decade-picker.component.html',
     styleUrls: ['./decade-picker.component.css', '../date-picker.component.css']
 })
+
 export class DecadePickerComponent implements OnInit {
 
-    @Input() view: string;
-    @Input() dt: Date;
     @Output() onView = new EventEmitter<string>();
-    @Output() onDecade = new EventEmitter<Date>();
+    @Output() onDecade = new EventEmitter();
 
     millenium = new Millenium;
 
-    constructor() { }
+    constructor(private cfg: CfgService) { }
 
     ngOnInit() {
         this.millenium = this.getMillenium();
@@ -25,18 +26,18 @@ export class DecadePickerComponent implements OnInit {
     }
 
     setDecade(decade: number) {
-        this.dt.setFullYear(decade);
-        this.onDecade.emit(this.dt);
+        this.cfg.curDate.setFullYear(decade);
+        this.onDecade.emit();
     }
 
     setMillenium(millenium: number) {
-        this.dt.setFullYear(this.dt.getFullYear() + millenium);
+        this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + millenium);
         this.millenium = this.getMillenium();
     }
 
     getMillenium(): Millenium {
         let millenium = new Millenium;
-        millenium.start = (this.dt.getFullYear() - this.dt.getFullYear() % 100) - 1;
+        millenium.start = (this.cfg.curDate.getFullYear() - this.cfg.curDate.getFullYear() % 100) - 1;
         millenium.end = millenium.start + 100;
         return millenium;
     }

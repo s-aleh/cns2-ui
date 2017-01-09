@@ -1,86 +1,96 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
+import { CfgService } from '../../../services/cfg.service';
+
 @Component({
     selector: 'day-picker',
     templateUrl: './day-picker.component.html',
     styleUrls: ['./day-picker.component.css', '../date-picker.component.css']
 })
+
 export class DayPickerComponent implements OnInit {
 
-    @Input() view: string;
-    @Input() dt: Date;
-    @Input() weekdayabbr: string;
-    @Input() local: string;
-    @Output() onView = new EventEmitter<string>();
-    @Output() onDate = new EventEmitter<number>();
-    @Output() onMonth = new EventEmitter<Date>();
+    @Output() onView = new EventEmitter();
+    @Output() onDate = new EventEmitter();
+    @Output() onMonth = new EventEmitter();
 
     datePipe: DatePipe;
-    days = new Days;
+    days: Array<Days> = [];
 
-    constructor(elementRef: ElementRef) {
-        this.local = elementRef.nativeElement.getAttribute('local');
-        this.weekdayabbr = elementRef.nativeElement.getAttribute('weekdayabbr');
-    }
+    constructor(elementRef: ElementRef, private cfg: CfgService) { }
 
     ngOnInit() {
-        this.datePipe = new DatePipe(this.local);
-        this.days = this.getDaysInMonth();
+        this.datePipe = new DatePipe(this.cfg.local);
+        this.getDaysInMonth();
     }
 
     onSetView(view: string): void {
         this.onView.emit(view);
     }
 
-    setDay(date: number): void {
-        this.dt.setDate(date);
-        this.onDate.emit(date);
+    setDay(date: number, enable: boolean): void {
+        if (enable) {
+            this.cfg.curDate.setDate(date);
+            this.onDate.emit();
+        }
     }
 
     setMonth(month: number): void {
-        this.dt.setMonth(this.dt.getMonth() + month);
-        this.days = this.getDaysInMonth();
-        this.onMonth.emit(this.dt);
+        this.cfg.curDate.setMonth(this.cfg.curDate.getMonth() + month);
+        this.getDaysInMonth();
+        this.onMonth.emit(this.cfg.curDate);
     }
 
-    getDaysInMonth(): Days {
-        let days = new Days;
+    getDaysInMonth(): void {
+        let days: Array<Days> = [];
         let nextMonth = new Date();
         let prevMonth = new Date();
 
         nextMonth.setDate(1);
-        nextMonth.setFullYear(this.dt.getFullYear());
-        nextMonth.setMonth(this.dt.getMonth() + 1);
+        nextMonth.setFullYear(this.cfg.curDate.getFullYear());
+        nextMonth.setMonth(this.cfg.curDate.getMonth() + 1);
         nextMonth.setHours(0);
         nextMonth.setMinutes(0);
         nextMonth.setSeconds(0);
 
         prevMonth.setDate(1);
-        prevMonth.setFullYear(this.dt.getFullYear());
-        prevMonth.setMonth(this.dt.getMonth());
+        prevMonth.setFullYear(this.cfg.curDate.getFullYear());
+        prevMonth.setMonth(this.cfg.curDate.getMonth());
         prevMonth.setHours(0);
         prevMonth.setMinutes(0);
         prevMonth.setSeconds(0);
         prevMonth.setDate(prevMonth.getDate() - 1);
 
-        days.prevEnd = prevMonth.getDate();
-        days.prevStart = prevMonth.getDate() - prevMonth.getDay();
-        days.curDays = Math.round((nextMonth.getTime() - this.dt.getTime()) / 86400000);
-        days.nextEnd = 7 - nextMonth.getDay();
-
-        if(days.curDays + days.nextEnd + days.prevEnd - days.prevStart + 1 == 35) {
-            days.nextEnd += 7;
+        this.days = [];
+        for (let i:number = prevMonth.getDate() - prevMonth.getDay(); i <= prevMonth.getDate(); i++) {
+            this.days.push(new Days(i, false, false));
         }
 
-        return days;
+        for (let i:number = 1; i <= Math.round((nextMonth.getTime() - this.cfg.curDate.getTime()) / 86400000); i++) {
+            this.days.push(new Days(i, true, this.cfg.date.getDate() == i && this.cfg.curDate.getMonth() == this.cfg.date.getMonth() && this.cfg.curDate.getFullYear() == this.cfg.date.getFullYear()));
+        }
+
+        for (let i:number = 1; i <= 7 - nextMonth.getDay(); i++) {
+            this.days.push(new Days(i, false, false));
+        }
+
+        if (this.days.length == 35) {
+            for (let i:number = 7 - nextMonth.getDay() + 1; i <= 7 - nextMonth.getDay() + 7; i++) {
+                this.days.push(new Days(i, false, false));
+            }
+        }
     }
 }
 
 class Days {
-    prevStart: number = 0;
-    prevEnd: number = 0;
-    curDays: number = 0;
-    nextStart: number = 1;
-    nextEnd: number = 0;
+    date: number;
+    enable: boolean = false;
+    cur: boolean = false;
+
+    constructor(date: number, enable: boolean, cur: boolean) {
+        this.date = date;
+        this.enable = enable;
+        this.cur = cur;
+    }
 }
