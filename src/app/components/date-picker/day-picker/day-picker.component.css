@@ -1,0 +1,28 @@
+.dp-name-days {
+    color: #999999;
+    font-weight: bold;
+}
+
+.dp-day {
+    background: gray;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin: 1px;
+    text-align: center;
+    width: 30px;
+}
+
+.dp-day-active:hover {
+    background-color: lightblue;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.dp-day-off { color: #cccccc; }
+
+.dp-cur-day {
+    background-color: cornflowerblue;
+    border-radius: 20px;
+    cursor: pointer;
+}

@@ -1,0 +1,10 @@
+<div class="dp-calendar">
+    <div>
+        <div class="dp-head" (click)="setYear(-1)"><span class="icon ion-arrow-left-b"></span></div><!--
+        --><div class="dp-head" (click)="onSetView('years')">{{datePipe.transform(dt, 'yyyy')}}</div><!--
+        --><div class="dp-head"(click)="setYear(1)"><span class="icon ion-arrow-right-b"></span></div>
+    </div>
+    <div>
+        <div class="dp-myd" (click)="setMonth(i)" *ngFor="let month of 12 | months; let i = index">{{month}}</div>
+    </div>
+</div>

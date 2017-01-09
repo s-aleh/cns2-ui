@@ -1,0 +1,10 @@
+<div class="dp-calendar">
+    <div>
+        <div class="dp-head" (click)="setDecade(-10)"><span class="icon ion-arrow-left-b"></span></div><!--
+        --><div class="dp-head" (click)="onSetView('decades')">{{decade.start}}-{{decade.end}}</div><!--
+        --><div class="dp-head" (click)="setDecade(10)"><span class="icon ion-arrow-right-b"></span></div>
+    </div>
+    <div>
+        <div class="dp-myd" (click)="setYear(year)" *ngFor="let year of decade.end | fromTo: decade.start">{{year}}</div>
+    </div>
+</div>
