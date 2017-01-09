@@ -1,24 +1,24 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 @Pipe({
-  name: 'months'
+    name: 'months'
 })
 
 export class MonthsPipe implements PipeTransform {
 
-  transform(value: any, args?: any): any {
-        let months = [];
+    transform(value: any, type: string, local: string, ): string[] {
+        let datePipe: DatePipe = new DatePipe(local);
+        let date = new Date();
+        let months: string[] = [];
+        date.setDate(1);
        
-        switch (args) {
-            case 1:
-                months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                break;
-            default:
-                months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                break;
+        for(let i: number = 0; i < 12; i++) {
+            date.setMonth(i);
+            months.push(datePipe.transform(date, type));
         }
 
         return months;
-  }
+    }
 
 }

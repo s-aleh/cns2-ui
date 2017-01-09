@@ -13,17 +13,23 @@ export class DatePickerComponent implements OnInit {
     @Input() dt: Date;
     @Output() onGetDate = new EventEmitter<string>();
     
+    local: string;
+    weekdayabbr: string;
+    monthabbr: string;
     placeholder: string;
     curDate: Date;
-
-    datePipe: DatePipe = new DatePipe('en-US');
+    datePipe: DatePipe;
 
     constructor(elementRef: ElementRef) {
         this.placeholder = elementRef.nativeElement.getAttribute('placeholder');
+        this.local = elementRef.nativeElement.getAttribute('local');
+        this.weekdayabbr = elementRef.nativeElement.getAttribute('weekdayabbr');
+        this.monthabbr = elementRef.nativeElement.getAttribute('monthabbr');
         this.view = undefined;
     }
 
     ngOnInit() {
+        this.datePipe = new DatePipe(this.local);
         this.curDate = new Date(this.date);
         this.date = this.datePipe.transform(this.curDate, this.placeholder);
         this.dt = new Date(this.date);

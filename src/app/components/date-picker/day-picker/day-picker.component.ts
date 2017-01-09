@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -10,16 +10,22 @@ export class DayPickerComponent implements OnInit {
 
     @Input() view: string;
     @Input() dt: Date;
+    @Input() weekdayabbr: string;
+    @Input() local: string;
     @Output() onView = new EventEmitter<string>();
     @Output() onDate = new EventEmitter<number>();
     @Output() onMonth = new EventEmitter<Date>();
 
-    datePipe: DatePipe = new DatePipe('en-US');
+    datePipe: DatePipe;
     days = new Days;
 
-    constructor() { }
+    constructor(elementRef: ElementRef) {
+        this.local = elementRef.nativeElement.getAttribute('local');
+        this.weekdayabbr = elementRef.nativeElement.getAttribute('weekdayabbr');
+    }
 
     ngOnInit() {
+        this.datePipe = new DatePipe(this.local);
         this.days = this.getDaysInMonth();
     }
 

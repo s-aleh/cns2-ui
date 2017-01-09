@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -10,15 +10,21 @@ export class MonthPickerComponent implements OnInit {
 
     @Input() view: string;
     @Input() dt: Date;
+    @Input() local: string;
+    @Input() monthabbr: string;
     @Output() onView = new EventEmitter<string>();
     @Output() onMonth = new EventEmitter<Date>();
     @Output() onYear = new EventEmitter<Date>();
 
-    datePipe: DatePipe = new DatePipe('en-US');
+    datePipe: DatePipe;
 
-    constructor() { }
+    constructor(elementRef: ElementRef) {
+        this.local = elementRef.nativeElement.getAttribute('local');
+        this.monthabbr = elementRef.nativeElement.getAttribute('monthabbr');
+    }
 
     ngOnInit() {
+        this.datePipe = new DatePipe(this.local);
     }
 
     onSetView(view: string): void {

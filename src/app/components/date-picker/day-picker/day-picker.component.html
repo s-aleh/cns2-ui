@@ -5,11 +5,11 @@
         --><div class="dp-head" (click)="setMonth(1)"><span class="icon ion-arrow-right-b"></span></div>
     </div>
     <div class="dp-name-days">
-        <div class="dp-day" *ngFor="let name of 1 | nameWeekdays">{{name}}</div>
+        <div class="dp-day" *ngFor="let name of 1 | nameWeekdays: weekdayabbr: local">{{name}}</div>
     </div>
     <div>
-        <div class="dp-day dp-day-off" *ngFor="let day of days.prevEnd | fromTo : days.prevStart">{{day}}</div><!--
-        --><div class="dp-day dp-day-active" (click)="setDay(date)" *ngFor="let date of days.curDays | fromTo : 1">{{date}}</div><!--
-        --><div class="dp-day dp-day-off" *ngFor="let day of days.nextEnd | fromTo : days.nextStart">{{day}}</div>
+        <div class="dp-day dp-day-off" *ngFor="let day of days.prevEnd | fromTo: days.prevStart">{{day}}</div><!--
+        --><div class="dp-day dp-day-active" (click)="setDay(date)" *ngFor="let date of days.curDays | fromTo: 1">{{date}}</div><!--
+        --><div class="dp-day dp-day-off" *ngFor="let day of days.nextEnd | fromTo: days.nextStart">{{day}}</div>
     </div>
 </div>

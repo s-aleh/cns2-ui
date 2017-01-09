@@ -1,8 +1,8 @@
 <div class="dp">
     <input placeholder="{{placeholder.toUpperCase()}}" value="{{date}}">
     <span class="icon ion-calendar" (click)="show()"></span>
-    <day-picker [(view)]="view" [(dt)]="dt" (onView)="onView($event)" (onDate)="onDate($event)" (onMonth)="onMonth($event)" *ngIf="view == 'days'"></day-picker>
-    <month-picker [(view)]="view" [dt]="dt" (onView)="onView($event)" (onMonth)="onMonth($event)" (onYear)="onYear($event)" *ngIf="view == 'months'"></month-picker>
+    <day-picker [local]="local" [weekdayabbr]="weekdayabbr" [(view)]="view" [(dt)]="dt" (onView)="onView($event)" (onDate)="onDate($event)" (onMonth)="onMonth($event)" *ngIf="view == 'days'"></day-picker>
+    <month-picker [local]="local" [monthabbr]="monthabbr" [(view)]="view" [dt]="dt" (onView)="onView($event)" (onMonth)="onMonth($event)" (onYear)="onYear($event)" *ngIf="view == 'months'"></month-picker>
     <year-picker [(view)]="view" [dt]="dt" (onView)="onView($event)" (onYear)="onYear($event)" *ngIf="view == 'years'"></year-picker>
     <decade-picker [(view)]="view" [dt]="dt" (onView)="onView($event)" (onDecade)="onDecade($event)" *ngIf="view == 'decades'"></decade-picker>
 </div>
