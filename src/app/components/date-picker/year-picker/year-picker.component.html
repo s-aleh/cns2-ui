@@ -1,10 +1,14 @@
 <div class="dp-calendar">
     <div>
-        <div class="dp-head dp-head-hover" (click)="setDecade(-10)"><span class="icon ion-arrow-left-b"></span></div><!--
-        --><div class="dp-head" (click)="onSetView('decades')">{{decade.start}}-{{decade.end}}</div><!--
-        --><div class="dp-head dp-head-hover" (click)="setDecade(10)"><span class="icon ion-arrow-right-b"></span></div>
+        <div class="dp-head" [ngClass]="{'dp-head-hover': (cfg.mindate.getFullYear() | floor: 10) < (cfg.curDate.getFullYear() | floor: 10) - 1}"
+            (click)="setDecade(-10)"><span class="icon ion-arrow-left-b"></span></div><!--
+        --><div class="dp-head dp-head-hover" (click)="onSetView('decades')">{{decade.start}}-{{decade.end}}</div><!--
+        --><div class="dp-head" [ngClass]="{'dp-head-hover': (cfg.maxdate.getFullYear() | floor: 10) > (cfg.curDate.getFullYear() | floor: 10) + 1}"
+            (click)="setDecade(10)"><span class="icon ion-arrow-right-b"></span></div>
     </div>
     <div>
-        <div class="dp-myd" (click)="setYear(year)" *ngFor="let year of decade.end | fromTo: decade.start"><div class="dp-my">{{year}}</div></div>
+        <div class="dp-myd" (click)="setYear(year)" *ngFor="let year of decade.end | fromTo: decade.start"><div class="dp-my"
+            [ngClass]="{'dp-my-hover': year >= cfg.mindate.getFullYear() && year <= cfg.maxdate.getFullYear(),
+            'dp-my-off':  year < cfg.mindate.getFullYear() || year > cfg.maxdate.getFullYear()}">{{year}}</div></div>
     </div>
 </div>

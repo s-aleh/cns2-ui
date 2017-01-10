@@ -26,13 +26,18 @@ export class YearPickerComponent implements OnInit {
     }
 
     setYear(year: number): void {
-        this.cfg.curDate.setFullYear(year);
-        this.onYear.emit();
+        if (year >= this.cfg.mindate.getFullYear() && year <= this.cfg.maxdate.getFullYear()) {
+            this.cfg.curDate.setFullYear(year);
+            this.onYear.emit();
+        }
     }
 
     setDecade(decade: number): void {
-        this.decade.start += decade;
-        this.decade.end += decade;
+        console.log();
+        if (Math.floor(this.cfg.mindate.getFullYear() / 10) < Math.floor(this.cfg.curDate.getFullYear() / 10) && decade < 0) {
+            this.decade.start += decade;
+            this.decade.end += decade;
+        }
     }
 
     getDecade(): Decade {

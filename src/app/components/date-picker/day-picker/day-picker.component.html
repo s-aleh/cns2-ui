@@ -1,8 +1,8 @@
 <div class="dp-calendar">
     <div>
-        <div class="dp-head dp-head-hover" (click)="setMonth(-1)"><span class="icon ion-arrow-left-b"></span></div><!--
-        --><div class="dp-head" (click)="onSetView('months')">{{datePipe.transform(cfg.curDate, 'MMMM, yyyy')}}</div><!--
-        --><div class="dp-head dp-head-hover" (click)="setMonth(1)"><span class="icon ion-arrow-right-b"></span></div>
+        <div class="dp-head" [ngClass]="{'dp-head-hover': this.cfg.minDMY < this.cfg.curDate}" (click)="setMonth(-1)"><span class="icon ion-arrow-left-b"></span></div><!--
+        --><div class="dp-head dp-head-hover" (click)="onSetView('months')">{{datePipe.transform(cfg.curDate, 'MMMM, yyyy')}}</div><!--
+        --><div class="dp-head" [ngClass]="{'dp-head-hover': this.cfg.maxDMY > this.cfg.curDate}" (click)="setMonth(1)"><span class="icon ion-arrow-right-b"></span></div>
     </div>
     <div class="dp-name-days">
         <div class="dp-day" *ngFor="let name of cfg.weekdays">{{name}}</div>

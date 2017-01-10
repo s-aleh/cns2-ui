@@ -11,6 +11,7 @@ import { MonthPickerComponent } from './components/date-picker/month-picker/mont
 import { YearPickerComponent } from './components/date-picker/year-picker/year-picker.component';
 import { DecadePickerComponent } from './components/date-picker/decade-picker/decade-picker.component';
 import { CfgService } from './services/cfg.service';
+import { FloorPipe } from './pipes/floor.pipe';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { CfgService } from './services/cfg.service';
         FromToPipe,
         MonthPickerComponent,
         YearPickerComponent,
-        DecadePickerComponent
+        DecadePickerComponent,
+        FloorPipe
     ],
     imports: [
         BrowserModule,

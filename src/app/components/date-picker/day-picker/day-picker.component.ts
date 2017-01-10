@@ -17,6 +17,8 @@ export class DayPickerComponent implements OnInit {
 
     datePipe: DatePipe;
     days: Array<Days> = [];
+    prev: boolean = true;
+    next: boolean = true;
 
     constructor(elementRef: ElementRef, private cfg: CfgService) { }
 
@@ -37,29 +39,24 @@ export class DayPickerComponent implements OnInit {
     }
 
     setMonth(month: number): void {
+        let mindate = new Date(this.cfg.mindate.getFullYear(), this.cfg.mindate.getMonth(), 1, 0, 0, 0, 0);
+        let maxdate = new Date(this.cfg.maxdate.getFullYear(), this.cfg.maxdate.getMonth(), 1, 0, 0, 0, 0);
+        maxdate.setMonth(maxdate.getMonth() + 1);
+        maxdate.setDate(1);
         this.cfg.curDate.setMonth(this.cfg.curDate.getMonth() + month);
-        this.getDaysInMonth();
-        this.onMonth.emit(this.cfg.curDate);
+      
+        if (this.cfg.curDate >= mindate && this.cfg.curDate < maxdate) {
+            this.getDaysInMonth();
+            this.onMonth.emit();
+        } else {
+            this.cfg.curDate.setMonth(this.cfg.curDate.getMonth() - month);
+        }
     }
 
     getDaysInMonth(): void {
         let days: Array<Days> = [];
-        let nextMonth = new Date();
-        let prevMonth = new Date();
-
-        nextMonth.setDate(1);
-        nextMonth.setFullYear(this.cfg.curDate.getFullYear());
-        nextMonth.setMonth(this.cfg.curDate.getMonth() + 1);
-        nextMonth.setHours(0);
-        nextMonth.setMinutes(0);
-        nextMonth.setSeconds(0);
-
-        prevMonth.setDate(1);
-        prevMonth.setFullYear(this.cfg.curDate.getFullYear());
-        prevMonth.setMonth(this.cfg.curDate.getMonth());
-        prevMonth.setHours(0);
-        prevMonth.setMinutes(0);
-        prevMonth.setSeconds(0);
+        let nextMonth = new Date(this.cfg.curDate.getFullYear(), this.cfg.curDate.getMonth() + 1, 1, 0, 0, 0, 0);
+        let prevMonth = new Date(this.cfg.curDate.getFullYear(), this.cfg.curDate.getMonth(), 1, 0, 0, 0, 0);
         prevMonth.setDate(prevMonth.getDate() - 1);
 
         this.days = [];
@@ -67,8 +64,17 @@ export class DayPickerComponent implements OnInit {
             this.days.push(new Days(i, false, false));
         }
 
+        let dt = new Date(this.cfg.curDate.getFullYear(), this.cfg.curDate.getMonth(), 1, 0, 0, 0, 0);
+
         for (let i:number = 1; i <= Math.round((nextMonth.getTime() - this.cfg.curDate.getTime()) / 86400000); i++) {
-            this.days.push(new Days(i, true, this.cfg.date.getDate() == i && this.cfg.curDate.getMonth() == this.cfg.date.getMonth() && this.cfg.curDate.getFullYear() == this.cfg.date.getFullYear()));
+            dt.setDate(i);
+            let enable: boolean = true;
+            if (dt < this.cfg.mindate || dt > this.cfg.maxdate) {
+                enable = false;
+            }
+            this.days.push(new Days(i, enable,
+                this.cfg.date.getDate() == i && this.cfg.curDate.getMonth() == this.cfg.date.getMonth() && this.cfg.curDate.getFullYear() == this.cfg.date.getFullYear())
+            );
         }
 
         for (let i:number = 1; i <= 7 - nextMonth.getDay(); i++) {

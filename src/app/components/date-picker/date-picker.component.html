@@ -1,5 +1,5 @@
 <div class="dp">
-    <input placeholder="{{placeholder.toUpperCase()}}" value="{{date}}">
+    <input placeholder="{{placeholder.toUpperCase()}}" name="date" [(ngModel)]="date">
     <span class="icon ion-calendar" (click)="show()"></span>
     <day-picker (onView)="onView($event)" (onDate)="onDate($event)" (onMonth)="onMonth($event)" *ngIf="cfg.view == 'days'"></day-picker>
     <month-picker (onView)="onView($event)" (onMonth)="onMonth($event)" (onYear)="onYear($event)" *ngIf="cfg.view == 'months'"></month-picker>

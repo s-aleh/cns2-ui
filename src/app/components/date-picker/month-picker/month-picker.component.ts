@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ElementRef } from '@angular/co
 import { DatePipe } from '@angular/common';
 
 import { CfgService } from '../../../services/cfg.service';
+import { Month } from '../../../models/month.model';
 
 @Component({
     selector: 'month-picker',
@@ -21,20 +22,27 @@ export class MonthPickerComponent implements OnInit {
 
     ngOnInit() {
         this.datePipe = new DatePipe(this.cfg.local);
+        this.cfg.getMonths();
     }
 
     onSetView(view: string): void {
         this.onView.emit(view);
     }
 
-    setMonth(month: number): void {
-        this.cfg.curDate.setMonth(month);
-        this.onMonth.emit();
+    setMonth(month: Month): void {
+        if (month.enable) {
+            this.cfg.curDate.setMonth(month.id);
+            this.cfg.getMonths();
+            this.onMonth.emit();
+        }
     }
 
     setYear(year: number): void {
-        this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + year);
-        this.onYear.emit();
+        if (this.cfg.minY < this.cfg.curDate.getFullYear() && year < 0 || this.cfg.maxY > this.cfg.curDate.getFullYear() && year > 0) {
+            this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + year);
+            this.cfg.getMonths();
+            this.onYear.emit();
+        }
     }
 
 }
