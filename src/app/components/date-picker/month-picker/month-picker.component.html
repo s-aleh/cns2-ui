@@ -1,11 +1,11 @@
 <div class="dp-calendar">
     <div>
-        <div class="dp-head" [ngClass]="{'dp-head-hover': this.cfg.minY < this.cfg.curDate.getFullYear()}" (click)="setYear(-1)"><span class="icon ion-arrow-left-b"></span></div><!--
+        <div class="dp-head" [ngClass]="{'dp-head-hover': cfg.months.prev}" (click)="setYear(-1)"><span class="icon ion-arrow-left-b"></span></div><!--
         --><div class="dp-head dp-head-hover" (click)="onSetView('years')">{{datePipe.transform(cfg.curDate, 'yyyy')}}</div><!--
-        --><div class="dp-head" [ngClass]="{'dp-head-hover': this.cfg.maxY > this.cfg.curDate.getFullYear()}" (click)="setYear(1)"><span class="icon ion-arrow-right-b"></span></div>
+        --><div class="dp-head" [ngClass]="{'dp-head-hover': cfg.months.next}" (click)="setYear(1)"><span class="icon ion-arrow-right-b"></span></div>
     </div>
     <div>
-        <div class="dp-myd" (click)="setMonth(month)" *ngFor="let month of cfg.months; let i = index"><div class="dp-my"
+        <div class="dp-myd" (click)="setMonth(month)" *ngFor="let month of cfg.months.items; let i = index"><div class="dp-my"
             [ngClass]="{'dp-my-hover': month.enable, 'dp-my-off': !month.enable}">{{month.name}}</div></div>
     </div>
 </div>

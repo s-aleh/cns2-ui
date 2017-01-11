@@ -38,7 +38,7 @@ export class MonthPickerComponent implements OnInit {
     }
 
     setYear(year: number): void {
-        if (this.cfg.minY < this.cfg.curDate.getFullYear() && year < 0 || this.cfg.maxY > this.cfg.curDate.getFullYear() && year > 0) {
+        if (this.cfg.months.prev && year < 0 || this.cfg.months.next && year > 0) {
             this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + year);
             this.cfg.getMonths();
             this.onYear.emit();

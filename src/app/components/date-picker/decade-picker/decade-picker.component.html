@@ -1,10 +1,11 @@
 <div class="dp-calendar">
     <div>
-        <div class="dp-head dp-head-hover" (click)="setMillenium(-100)"><span class="icon ion-arrow-left-b"></span></div><!--
-        --><div class="dp-head">{{millenium.start}}-{{millenium.end}}</div><!--
-        --><div class="dp-head dp-head-hover" (click)="setMillenium(100)"><span class="icon ion-arrow-right-b"></span></div>
+        <div class="dp-head" [ngClass]="{'dp-head-hover': cfg.decades.prev}" (click)="setMillenium(-100)"><span class="icon ion-arrow-left-b"></span></div><!--
+        --><div class="dp-head">{{cfg.decades.title}}</div><!--
+        --><div class="dp-head" [ngClass]="{'dp-head-hover': cfg.decades.next}" (click)="setMillenium(100)"><span class="icon ion-arrow-right-b"></span></div>
     </div>
     <div>
-        <div class="dp-myd" (click)="setDecade(year)" *ngFor="let year of millenium.end | fromTo:millenium.start:10"><div class="dp-my">{{year}}-{{year + 10}}</div></div>
+        <div class="dp-myd" (click)="setDecade(decade.start)" *ngFor="let decade of cfg.decades.items"><div class="dp-my"
+        [ngClass]="{'dp-my-hover': decade.enable, 'dp-my-off': !decade.enable}">{{decade.name}}</div></div>
     </div>
 </div>

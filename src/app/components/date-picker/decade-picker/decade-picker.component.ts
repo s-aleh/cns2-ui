@@ -13,12 +13,10 @@ export class DecadePickerComponent implements OnInit {
     @Output() onView = new EventEmitter<string>();
     @Output() onDecade = new EventEmitter();
 
-    millenium = new Millenium;
-
     constructor(private cfg: CfgService) { }
 
     ngOnInit() {
-        this.millenium = this.getMillenium();
+        this.cfg.getDecades();
     }
 
     onSetView(view: string): void {
@@ -31,19 +29,10 @@ export class DecadePickerComponent implements OnInit {
     }
 
     setMillenium(millenium: number) {
-        this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + millenium);
-        this.millenium = this.getMillenium();
+        if (this.cfg.decades.prev && millenium < 0 || this.cfg.decades.next && millenium > 0) {
+            this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + millenium);
+            this.cfg.getDecades();
+        }
     }
 
-    getMillenium(): Millenium {
-        let millenium = new Millenium;
-        millenium.start = (this.cfg.curDate.getFullYear() - this.cfg.curDate.getFullYear() % 100) - 1;
-        millenium.end = millenium.start + 100;
-        return millenium;
-    }
-}
-
-class Millenium {
-    start: number = 2000;
-    end: number = 2099;
 }

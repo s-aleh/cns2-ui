@@ -16,15 +16,12 @@ export class DayPickerComponent implements OnInit {
     @Output() onMonth = new EventEmitter();
 
     datePipe: DatePipe;
-    days: Array<Days> = [];
-    prev: boolean = true;
-    next: boolean = true;
 
     constructor(elementRef: ElementRef, private cfg: CfgService) { }
 
     ngOnInit() {
         this.datePipe = new DatePipe(this.cfg.local);
-        this.getDaysInMonth();
+        this.cfg.getDays();
     }
 
     onSetView(view: string): void {
@@ -39,64 +36,10 @@ export class DayPickerComponent implements OnInit {
     }
 
     setMonth(month: number): void {
-        let mindate = new Date(this.cfg.mindate.getFullYear(), this.cfg.mindate.getMonth(), 1, 0, 0, 0, 0);
-        let maxdate = new Date(this.cfg.maxdate.getFullYear(), this.cfg.maxdate.getMonth(), 1, 0, 0, 0, 0);
-        maxdate.setMonth(maxdate.getMonth() + 1);
-        maxdate.setDate(1);
-        this.cfg.curDate.setMonth(this.cfg.curDate.getMonth() + month);
-      
-        if (this.cfg.curDate >= mindate && this.cfg.curDate < maxdate) {
-            this.getDaysInMonth();
-            this.onMonth.emit();
-        } else {
-            this.cfg.curDate.setMonth(this.cfg.curDate.getMonth() - month);
+        if(this.cfg.days.prev && month < 0 || this.cfg.days.next && month > 0 ) {
+            this.cfg.curDate.setMonth(this.cfg.curDate.getMonth() + month);
+            this.cfg.getDays();
         }
     }
 
-    getDaysInMonth(): void {
-        let days: Array<Days> = [];
-        let nextMonth = new Date(this.cfg.curDate.getFullYear(), this.cfg.curDate.getMonth() + 1, 1, 0, 0, 0, 0);
-        let prevMonth = new Date(this.cfg.curDate.getFullYear(), this.cfg.curDate.getMonth(), 1, 0, 0, 0, 0);
-        prevMonth.setDate(prevMonth.getDate() - 1);
-
-        this.days = [];
-        for (let i:number = prevMonth.getDate() - prevMonth.getDay(); i <= prevMonth.getDate(); i++) {
-            this.days.push(new Days(i, false, false));
-        }
-
-        let dt = new Date(this.cfg.curDate.getFullYear(), this.cfg.curDate.getMonth(), 1, 0, 0, 0, 0);
-
-        for (let i:number = 1; i <= Math.round((nextMonth.getTime() - this.cfg.curDate.getTime()) / 86400000); i++) {
-            dt.setDate(i);
-            let enable: boolean = true;
-            if (dt < this.cfg.mindate || dt > this.cfg.maxdate) {
-                enable = false;
-            }
-            this.days.push(new Days(i, enable,
-                this.cfg.date.getDate() == i && this.cfg.curDate.getMonth() == this.cfg.date.getMonth() && this.cfg.curDate.getFullYear() == this.cfg.date.getFullYear())
-            );
-        }
-
-        for (let i:number = 1; i <= 7 - nextMonth.getDay(); i++) {
-            this.days.push(new Days(i, false, false));
-        }
-
-        if (this.days.length == 35) {
-            for (let i:number = 7 - nextMonth.getDay() + 1; i <= 7 - nextMonth.getDay() + 7; i++) {
-                this.days.push(new Days(i, false, false));
-            }
-        }
-    }
-}
-
-class Days {
-    date: number;
-    enable: boolean = false;
-    cur: boolean = false;
-
-    constructor(date: number, enable: boolean, cur: boolean) {
-        this.date = date;
-        this.enable = enable;
-        this.cur = cur;
-    }
 }

@@ -13,12 +13,10 @@ export class YearPickerComponent implements OnInit {
     @Output() onView = new EventEmitter<string>();
     @Output() onYear = new EventEmitter();
 
-    decade = new Decade;
-  
     constructor(private cfg: CfgService) { }
 
     ngOnInit() {
-        this.decade = this.getDecade();
+        this.cfg.getYears();
     }
 
     onSetView(view: string): void {
@@ -33,23 +31,10 @@ export class YearPickerComponent implements OnInit {
     }
 
     setDecade(decade: number): void {
-        console.log();
-        if (Math.floor(this.cfg.mindate.getFullYear() / 10) < Math.floor(this.cfg.curDate.getFullYear() / 10) && decade < 0) {
-            this.decade.start += decade;
-            this.decade.end += decade;
+        if (decade < 0 && this.cfg.years.prev || decade > 0 && this.cfg.years.next) {
+            this.cfg.curDate.setFullYear(this.cfg.curDate.getFullYear() + decade);
+            this.cfg.getYears();
         }
     }
 
-    getDecade(): Decade {
-        let decade = new Decade;
-        decade.start = (this.cfg.curDate.getFullYear() - this.cfg.curDate.getFullYear() % 10) - 1;
-        decade.end = decade.start + 11;
-        return decade;
-    }
-
-}
-
-class Decade {
-    start: number = 0;
-    end: number = 0;
 }
