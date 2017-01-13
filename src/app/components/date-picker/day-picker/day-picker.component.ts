@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { CfgService } from '../../../services/cfg.service';
@@ -24,6 +24,18 @@ export class DayPickerComponent implements OnInit {
         this.cfg.getDays();
     }
 
+    @HostListener('mousewheel', ['$event']) onMouseWheelChrome(event: any) {
+        event.deltaY > 0 ? this.setMonth(1) : this.setMonth(-1);
+    }
+
+    @HostListener('DOMMouseScroll', ['$event']) onMouseWheelFirefox(event: any) {
+        event.deltaY > 0 ? this.setMonth(1) : this.setMonth(-1);
+    }
+
+    @HostListener('onmousewheel', ['$event']) onMouseWheelIE(event: any) {
+        event.deltaY > 0 ? this.setMonth(1) : this.setMonth(-1);
+    }
+    
     onSetView(view: string): void {
         this.onView.emit(view);
     }

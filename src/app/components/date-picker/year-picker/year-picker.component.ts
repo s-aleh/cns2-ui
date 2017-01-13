@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 
 import { CfgService} from '../../../services/cfg.service';
 
@@ -23,6 +23,18 @@ export class YearPickerComponent implements OnInit {
         this.onView.emit(view);
     }
 
+    @HostListener('mousewheel', ['$event']) onMouseWheelChrome(event: any) {
+        event.deltaY > 0 ? this.setDecade(10) : this.setDecade(-10);
+    }
+
+    @HostListener('DOMMouseScroll', ['$event']) onMouseWheelFirefox(event: any) {
+        event.deltaY > 0 ? this.setDecade(10) : this.setDecade(-10);
+    }
+
+    @HostListener('onmousewheel', ['$event']) onMouseWheelIE(event: any) {
+        event.deltaY > 0 ? this.setDecade(10) : this.setDecade(-10);
+    }
+    
     setYear(year: number): void {
         if (year >= this.cfg.mindate.getFullYear() && year <= this.cfg.maxdate.getFullYear()) {
             this.cfg.curDate.setFullYear(year);

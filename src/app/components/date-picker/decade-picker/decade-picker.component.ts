@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 
 import { CfgService} from '../../../services/cfg.service';
 
@@ -19,6 +19,18 @@ export class DecadePickerComponent implements OnInit {
         this.cfg.getDecades();
     }
 
+    @HostListener('mousewheel', ['$event']) onMouseWheelChrome(event: any) {
+        event.deltaY > 0 ? this.setMillenium(100) : this.setMillenium(-100);
+    }
+
+    @HostListener('DOMMouseScroll', ['$event']) onMouseWheelFirefox(event: any) {
+        event.deltaY > 0 ? this.setMillenium(100) : this.setMillenium(-100);
+    }
+
+    @HostListener('onmousewheel', ['$event']) onMouseWheelIE(event: any) {
+        event.deltaY > 0 ? this.setMillenium(100) : this.setMillenium(-100);
+    }
+    
     onSetView(view: string): void {
         this.onView.emit(view);
     }

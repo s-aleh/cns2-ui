@@ -1,8 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { CfgService } from '../../../services/cfg.service';
-import { Month } from '../../../models/month.model';
+import { IDateItem } from '../../../models/idate.interface';
 
 @Component({
     selector: 'month-picker',
@@ -25,11 +25,23 @@ export class MonthPickerComponent implements OnInit {
         this.cfg.getMonths();
     }
 
+    @HostListener('mousewheel', ['$event']) onMouseWheelChrome(event: any) {
+        event.deltaY > 0 ? this.setYear(1) : this.setYear(-1);
+    }
+
+    @HostListener('DOMMouseScroll', ['$event']) onMouseWheelFirefox(event: any) {
+        event.deltaY > 0 ? this.setYear(1) : this.setYear(-1);
+    }
+
+    @HostListener('onmousewheel', ['$event']) onMouseWheelIE(event: any) {
+        event.deltaY > 0 ? this.setYear(1) : this.setYear(-1);
+    }
+
     onSetView(view: string): void {
         this.onView.emit(view);
     }
 
-    setMonth(month: Month): void {
+    setMonth(month: IDateItem): void {
         if (month.enable) {
             this.cfg.curDate.setMonth(month.id);
             this.cfg.getMonths();

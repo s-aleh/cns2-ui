@@ -134,13 +134,13 @@ export class CfgService {
         let next: Date = new Date(prev.getFullYear() + 99, 11, 31, 0, 0, 0, 0);
         this.decades.prev = prev > this.mindate ? true : false;
         this.decades.next = next < this.maxdate ? true : false;
-        this.decades.title = prev.getFullYear() + '-' + next.getFullYear();
+        this.decades.title = prev.getFullYear() + '- ' + next.getFullYear();
 
         let j: number = 0;
         if (this.decades.prev) {
             this.decades.items.push({
                 id: j,
-                name: (prev.getFullYear() - 10) + '-' + (prev.getFullYear() - 1),
+                name: (prev.getFullYear() - 10) + '- ' + (prev.getFullYear() - 1),
                 enable: false,
                 start: prev.getFullYear() - 10,
                 end: prev.getFullYear() - 1
@@ -151,7 +151,7 @@ export class CfgService {
         for (let i: number = prev.getFullYear(); i < next.getFullYear(); i += 10) {
             this.decades.items.push({
                 id: j,
-                name: i + '-' + (i + 9),
+                name: i + '- ' + (i + 9),
                 enable: this.mindate.getFullYear() >= i && this.mindate.getFullYear() <= i + 9 ||
                         i <= this.maxdate.getFullYear() && this.maxdate.getFullYear() <= i + 9 ||
                         i >= this.mindate.getFullYear() && i + 9 <= this.maxdate.getFullYear() ? true : false,
@@ -164,7 +164,7 @@ export class CfgService {
         if (this.decades.next) {
             this.decades.items.push({
                 id: j,
-                name: (next.getFullYear() + 1) + '-' + (next.getFullYear() + 10),
+                name: (next.getFullYear() + 1) + '- ' + (next.getFullYear() + 10),
                 enable: false,
                 start: next.getFullYear() + 1,
                 end: next.getFullYear() + 10
